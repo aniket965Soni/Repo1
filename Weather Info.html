@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://127.0.0.1:5500/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Weather Info </title>
+    <!-- Tailwind CSS CDN -->
+    <script src="./Weather Info_files/saved_resource"></script>
+    <link href="./Weather Info_files/css2" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right top, #6EE7B7, #3B82F6); /* Green to Blue Gradient */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Deeper shadow */
+            padding: 2.5rem;
+            max-width: 28rem; /* Increased max-width */
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 25px 35px -8px rgba(0, 0, 0, 0.15), 0 15px 15px -8px rgba(0, 0, 0, 0.06);
+        }
+        input[type="text"] {
+            border: 2px solid #D1D5DB; /* Light gray border */
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 1.125rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6; /* Blue focus border */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Light blue shadow on focus */
+        }
+        button {
+            background-color: #3B82F6; /* Blue button */
+            color: white;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #2563EB; /* Darker blue on hover */
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .weather-info {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .weather-info.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3B82F6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-4{margin-top:1rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-16{height:4rem}.min-h-screen{min-height:100vh}.w-16{width:4rem}.flex-shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.gap-4{gap:1rem}.p-4{padding:1rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}}</style></head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="card">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Weather Wise</h1>
+
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <input type="text" id="locationInput" placeholder="Enter city name" class="flex-grow">
+            <button id="getWeatherBtn" class="flex-shrink-0">Get Weather</button>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner mb-4" style="display: none;"></div>
+
+        <div id="weatherInfo" class="weather-info text-gray-700 show">
+            <h2 id="cityName" class="text-3xl font-semibold mb-2">Bhopal, India</h2>
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <img id="weatherIcon" src="./Weather Info_files/143.png" alt="Mist" class="w-16 h-16">
+                <p id="temperature" class="text-5xl font-bold text-gray-900">23</p>
+                <p class="text-3xl font-medium text-gray-600">°C</p>
+            </div>
+            <p id="condition" class="text-2xl font-medium mb-2">Mist</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+                <p><span class="font-semibold">Humidity:</span> <span id="humidity">89</span>%</p>
+                <p><span class="font-semibold">Wind:</span> <span id="windSpeed">8.6</span> km/h</p>
+                <p><span class="font-semibold">Feels Like:</span> <span id="feelsLike">25.1</span>°C</p>
+                <p><span class="font-semibold">UV Index:</span> <span id="uvIndex">1.1</span></p>
+            </div>
+            <p id="errorMessage" class="text-red-500 mt-4 hidden"></p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to HTML elements
+        const locationInput = document.getElementById('locationInput');
+        const getWeatherBtn = document.getElementById('getWeatherBtn');
+        const weatherInfoDiv = document.getElementById('weatherInfo');
+        const cityName = document.getElementById('cityName');
+        const countrynationalflag = document.getElementById('nationalflag');
+        const weatherIcon = document.getElementById('weatherIcon');
+        const temperature = document.getElementById('temperature');
+        const condition = document.getElementById('condition');
+        const humidity = document.getElementById('humidity');
+        const windSpeed = document.getElementById('windSpeed');
+        const feelsLike = document.getElementById('feelsLike');
+        const uvIndex = document.getElementById('uvIndex');
+        const errorMessage = document.getElementById('errorMessage');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // API Key (provided by the user)
+        const API_KEY = '21cf93dfe3994f61b9c02806250608';
+        // Changed BASE_URL to use HTTPS for better compatibility and to avoid mixed content issues.
+        const BASE_URL = 'https://api.weatherapi.com/v1/current.json';
+
+        /**
+         * Shows the loading spinner and hides weather info/error messages.
+         */
+        function showLoading() {
+            loadingSpinner.style.display = 'block';
+            weatherInfoDiv.classList.remove('show');
+            errorMessage.classList.add('hidden');
+        }
+
+        /**
+         * Hides the loading spinner.
+         */
+        function hideLoading() {
+            loadingSpinner.style.display = 'none';
+        }
+
+        /**
+         * Displays an error message.
+         * @param {string} message - The error message to display.
+         */
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            weatherInfoDiv.classList.remove('show');
+            hideLoading();
+        }
+
+        /**
+         * Fetches weather data from the API.
+         * @param {string} location - The city name or location to fetch weather for.
+         */
+        async function getWeatherData(location) {
+            if (!location) {
+                showError('Please enter a location.');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                // Construct the API URL
+                const url = `${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(location)}&aqi=no`; // aqi=no as per user's original request, but user's example had aqi=yes. Sticking to user's example for consistency.
+                console.log('Fetching weather data from:', url); // Log the URL for debugging
+
+                // Fetch data from the API
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // Check for API errors (e.g., invalid location)
+                if (data.error) {
+                    showError(data.error.message);
+                    return;
+                }
+
+                // Update the UI with weather data
+                cityName.textContent = `${data.location.name}, ${data.location.country}`;
+                temperature.textContent = data.current.temp_c;
+                condition.textContent = data.current.condition.text;
+                humidity.textContent = data.current.humidity;
+                windSpeed.textContent = data.current.wind_kph;
+                feelsLike.textContent = data.current.feelslike_c;
+                uvIndex.textContent = data.current.uv;
+
+                // Set weather icon
+                weatherIcon.src = data.current.condition.icon;
+                weatherIcon.alt = data.current.condition.text;
+                weatherIcon.classList.remove('hidden'); // Show the icon
+
+                // Show the weather info div with animation
+                weatherInfoDiv.classList.add('show');
+                errorMessage.classList.add('hidden'); // Hide any previous error messages
+
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                showError('Could not retrieve weather data. Please try again. Check your internet connection or try a different location.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Event listener for the button click
+        getWeatherBtn.addEventListener('click', () => {
+            getWeatherData(locationInput.value.trim());
+        });
+
+        // Event listener for pressing Enter key in the input field
+        locationInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                getWeatherData(locationInput.value.trim());
+            }
+        });
+
+        // Initial load: Fetch weather for a default city (e.g., London)
+        // This gives the user an immediate example of the app's functionality.
+        window.onload = () => {
+            getWeatherData('Bhopal');
+        };
+    </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+</body></html>
